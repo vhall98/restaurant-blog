@@ -47,7 +47,8 @@ class ReviewsController < ApplicationController
   # POST /reviews
   # POST /reviews.json
   def create
-    @review = Review.new(params[:review])
+    _review = review_params
+    @review = Review.new(_review)
 
     respond_to do |format|
       if @review.save
@@ -66,7 +67,8 @@ class ReviewsController < ApplicationController
     @review = Review.find(params[:id])
 
     respond_to do |format|
-      if @review.update_attributes(params[:review])
+      _review = review_params
+      if @review.update_attributes(_review)
         format.html { redirect_to @review, notice: 'Review was successfully updated.' }
         format.json { head :no_content }
       else
@@ -91,8 +93,9 @@ class ReviewsController < ApplicationController
   #  POST  /reviews/comment
   def comment
     if (session[:user_id] && session[:user_id].length > 0)
-      params[:comment][:date] = Time.now
-      Review.find(params[:id]).comments.create(params[:comment])
+      _comment = comment_params
+      _comment[:date] = Time.now
+      Review.find(params[:id]).comments.create(_comment)
       redirect_to :action => "show", :id => params[:id]
     else
        flash[:notice] = "Please log on or register to comment"
@@ -110,14 +113,11 @@ class ReviewsController < ApplicationController
 
   def newuser
     respond_to do |format|
-      if params[:userid].empty? || params[:password].empty? || params[:fullname].empty? || params[:email].empty?
+      _user = user_params
+      if _user[:userid].empty? || _user[:password].empty? || _user[:fullname].empty? || _user[:email].empty?
         flash[:notice] = "All entries must be filled out."
       else
-        user = User.new
-        user.userid = params[:userid]
-        user.password = params[:password]
-        user.fullname = params[:fullname]
-        user.email = params[:email]
+        user = User.new(user_params)
         if user.save
           session[:user_id] = user.userid
           flash[:notice] = 'New User ID was successfully created.'
@@ -148,5 +148,15 @@ class ReviewsController < ApplicationController
     redirect_to reviews_path
   end
   
+  def user_params
+    params.require(:user).permit(:email, :fullname, :password, :userid)
+  end
   
+  def review_params
+    params.require(:review).permit(:article, :date, :poster, :title)
+  end
+  
+  def comment_params
+    params.require(:comment).permit(:comment, :date, :poster, :review_id)
+  end
 end
