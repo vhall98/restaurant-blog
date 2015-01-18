@@ -9,43 +9,44 @@
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended to check this file into your version control system.
+# It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140821015344) do
+ActiveRecord::Schema.define(version: 20150118072937) do
 
-  create_table "comments", :force => true do |t|
+  create_table "comments", force: :cascade do |t|
     t.datetime "date"
-    t.string   "poster"
+    t.string   "poster",     limit: 255
     t.text     "comment"
     t.integer  "review_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
-  create_table "news", :force => true do |t|
+  create_table "news", force: :cascade do |t|
     t.datetime "date"
-    t.string   "title"
+    t.string   "title",      limit: 255
     t.text     "article"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
-  create_table "reviews", :force => true do |t|
-    t.string   "poster"
+  create_table "reviews", force: :cascade do |t|
+    t.string   "poster",     limit: 255
     t.datetime "date"
     t.text     "article"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-    t.string   "title"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "title",      limit: 255
   end
 
-  create_table "users", :force => true do |t|
-    t.string   "userid"
-    t.string   "password"
-    t.string   "fullname"
-    t.string   "email"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+  create_table "users", force: :cascade do |t|
+    t.string   "userid",             limit: 255
+    t.string   "fullname",           limit: 255
+    t.string   "email",              limit: 255
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.string   "salt"
+    t.string   "encrypted_password"
   end
 
 end

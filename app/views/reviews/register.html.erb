@@ -1,11 +1,24 @@
 <h1>Register for new account</h1>
 
 <%= form_for :user, :url => {:controller => 'reviews', :action => 'newuser'} do |f| %>
-	<p> <b>User ID</b><br /> <%= f.text_field :userid %> </p>
-	<p> <b>Full Name</b><br /> <%= f.text_field :fullname %> </p>
+  <% if !@user.nil? && @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this review from being saved:</h2>
 
-	<p> <b>Password</b><br /> <%= f.password_field :password %> </p>
-	<p> <b>E-mail</b><br /> <%= f.text_field :email %> </p>
+      <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+	<p> <b>User ID</b><br /> <%= f.text_field :userid %></p>
 
-	<p> <%= f.submit "Create Account" %> </p> 
+	<p> <b>Full Name</b><br /> <%= f.text_field :fullname %></p>
+
+	<p> <b>Password</b><br /> <%= f.password_field :password %></p>
+	<p> <b>Password Confirmation:</b></br> <%= f.password_field :password_confirmation %></p>
+	<p> <b>E-mail</b><br /> <%= f.text_field :email %> <span style="color: green"></span></p>
+
+	<p> <%= f.submit "Create Account", :id => "register" %> </p> 
 <% end %>
