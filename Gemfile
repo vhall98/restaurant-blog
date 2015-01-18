@@ -18,6 +18,7 @@ gem 'uglifier', '>= 2.7.0'
 
 gem 'jquery-rails'
 gem 'rails-observers'
+gem 'bcrypt', :require => 'bcrypt'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

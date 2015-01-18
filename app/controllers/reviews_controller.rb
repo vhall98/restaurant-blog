@@ -110,23 +110,22 @@ class ReviewsController < ApplicationController
     @reviews = Review.where("title like ? OR article like ?", pattern, pattern)
   end
 
-
   def newuser
-    respond_to do |format|
+    # respond_to do |format|
       _user = user_params
-      if _user[:userid].empty? || _user[:password].empty? || _user[:fullname].empty? || _user[:email].empty?
-        flash[:notice] = "All entries must be filled out."
+      @user = User.new(user_params)
+      if !@user.nil? && @user.save
+        session[:user_id] = @user.userid
+        flash[:notice] = 'New User ID was successfully created.'
+      elsif !@user.nil? && !@user.id.nil?
+        flash[:notice] = "Sorry, User ID already exists."
       else
-        user = User.new(user_params)
-        if user.save
-          session[:user_id] = user.userid
-          flash[:notice] = 'New User ID was successfully created.'
-        else
-          flash[:notice] = 'Sorry, User ID already exists.'
-        end
+        flash[:notice] = "All paramters must be entered."
       end
-      format.html {redirect_to '/reviews/register' }
-    end
+      # format.html {redirect_to '/reviews/register' }
+      render 'reviews/register'
+    # end
+    
   end
 
   def validate
@@ -149,7 +148,7 @@ class ReviewsController < ApplicationController
   end
   
   def user_params
-    params.require(:user).permit(:email, :fullname, :password, :userid)
+    params.require(:user).permit(:email, :fullname, :password, :userid, :password_confirmation)
   end
   
   def review_params
